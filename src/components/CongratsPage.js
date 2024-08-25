@@ -12,7 +12,7 @@ const CongratsPage = ({ formData }) => {
         <strong>Skip the wait, call now!</strong>
       </p>
       <button className="call-now-button">
-        <i className="fa fa-phone" aria-hidden="true"></i> Call 1-830-376-0449
+        <i className="fa fa-phone" aria-hidden="true"></i> <a href="tel: +1-830-376-0449">Call 1-830-376-0449</a>
       </button>
       <div className="summary">
         <div className="summary-item">

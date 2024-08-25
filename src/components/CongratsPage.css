@@ -38,6 +38,10 @@
   align-items: center;
   justify-content: center;
 }
+.call-now-button a {
+  text-decoration: none;
+  color: #fff;
+}
 
 .call-now-button i {
   margin-right: 10px;

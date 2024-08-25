@@ -107,8 +107,8 @@ const App = () => {
         }
         break;
       case "phone":
-        if (!/^\(\d{3}\) \d{3}-\d{4}$/.test(value)) {
-          errorMsg = "Phone number must be in format (123) 456-7890.";
+        if (value.length < 8 || value.length > 20) {
+          errorMsg = "Phone number must be between 8 and 20 characters.";
         }
         break;
       default:
