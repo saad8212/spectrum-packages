@@ -1,10 +1,23 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import StepProgressBar from "./components/Progressbar";
 import SurveyStep from "./components/SurveyStep";
 import CongratsPage from "./components/CongratsPage";
+import SurveyTable from "./components/SurveyTable"; // Import SurveyTable
+import { submitSurvey } from "./services/apiService"; // Import the service function
 import "./App.css";
-
 const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/table" element={<SurveyTable />} />
+      </Routes>
+    </Router>
+  );
+};
+
+const Home = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     provider: "",
@@ -35,7 +48,6 @@ const App = () => {
       options: ["Verizon", "Xfinity", "AT&T", "Other"],
       type: "radio",
       name: "currentProvider",
-      // This question will only be shown if the condition is met
       condition: formData.provider === "Yes",
     },
     {
@@ -58,7 +70,12 @@ const App = () => {
     },
     {
       question: "How soon do you need service?",
-      options: ["ASAP", "Within a week or so", "Within a month", "I'm not sure"],
+      options: [
+        "ASAP",
+        "Within a week or so",
+        "Within a month",
+        "I'm not sure",
+      ],
       type: "radio",
       name: "urgency",
     },
@@ -130,7 +147,10 @@ const App = () => {
         if (errorMsg) newErrors[field] = errorMsg;
       });
     } else {
-      const errorMsg = validateField(currentQuestion.name, formData[currentQuestion.name]);
+      const errorMsg = validateField(
+        currentQuestion.name,
+        formData[currentQuestion.name]
+      );
       if (errorMsg) newErrors[currentQuestion.name] = errorMsg;
     }
 
@@ -138,10 +158,21 @@ const App = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (validateCurrentStep()) {
       setErrors({});
-      setCurrentStep(currentStep + 1);
+      if (currentStep === filteredQuestions.length - 1) {
+        // Final step: submit data using the service function
+        try {
+          const data = await submitSurvey(formData);
+          console.log("Survey submitted successfully:", data);
+          setCurrentStep(currentStep + 1); // Move to CongratsPage
+        } catch (error) {
+          console.error("Failed to submit survey:", error.message);
+        }
+      } else {
+        setCurrentStep(currentStep + 1);
+      }
     }
   };
 
@@ -163,7 +194,10 @@ const App = () => {
       </header>
       {currentStep < filteredQuestions.length ? (
         <>
-          <StepProgressBar totalSteps={filteredQuestions.length} currentStep={currentStep} />
+          <StepProgressBar
+            totalSteps={filteredQuestions.length}
+            currentStep={currentStep}
+          />
           <SurveyStep
             question={filteredQuestions[currentStep]}
             handleNext={handleNext}
@@ -177,7 +211,6 @@ const App = () => {
       ) : (
         <CongratsPage formData={formData} />
       )}
-
     </div>
   );
 };

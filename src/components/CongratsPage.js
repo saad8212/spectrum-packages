@@ -1,6 +1,6 @@
 import React from "react";
-import "./CongratsPage.css";
-
+import "./CongratsPage.css"; 
+import "../App.css";
 const CongratsPage = ({ formData }) => {
   return (
     <div className="congrats-page">

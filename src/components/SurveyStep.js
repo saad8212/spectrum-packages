@@ -1,6 +1,6 @@
 import React from "react";
-import "./SurveyStep.css";
-
+import "./SurveyStep.css"; 
+import "../App.css";
 const SurveyStep = ({
   question,
   handleNext,
@@ -54,7 +54,7 @@ const SurveyStep = ({
       );
     } else if (question.type === "contact") {
       return (
-        <div>
+        <div className="survey-step">
           <input
             type="text"
             name="firstName"
